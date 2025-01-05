@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using ExpenseManager.Components.Utilities;
+using Microsoft.Extensions.Logging;
 
 namespace ExpenseManager
 {
@@ -15,9 +16,26 @@ namespace ExpenseManager
                 });
 
             builder.Services.AddMauiBlazorWebView();
+            if (!Directory.Exists(Utils.ROOTFOLDER))
+            {
+                Directory.CreateDirectory(Utils.ROOTFOLDER);
+            }
+
+
+           
+            if (!File.Exists(Utils.TRANSACTIONS))
+            {
+                File.Create(Utils.TRANSACTIONS).Close();
+            }
+            if (!File.Exists(Utils.TAGS))
+            {
+                File.Create(Utils.TAGS).Close();
+            }
+           
+
 
 #if DEBUG
-    		builder.Services.AddBlazorWebViewDeveloperTools();
+            builder.Services.AddBlazorWebViewDeveloperTools();
     		builder.Logging.AddDebug();
 #endif
 

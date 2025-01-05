@@ -1,0 +1,110 @@
+﻿@page "/addTag"
+@using ExpenseManager.Components.Model
+@using Components.Model;
+@using System.Text.Json;
+@using Components.Utilities;
+
+<div class="flex min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <!-- Main Content -->
+    <div class="ml-20 flex-1 px-8 py-10">
+        <!-- Header Section -->
+        <div class="mb-6">
+            <h2 class="text-4xl font-extrabold text-gray-800">Manage Tags</h2>
+            <p class="text-sm text-gray-500">Organize your content effectively by adding custom tags.</p>
+        </div>
+
+        <!-- Add Tag Section -->
+        <div class="mb-10 p-6 bg-white rounded-lg shadow-lg">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Add a New Tag</h3>
+            <div class="flex items-center gap-4">
+                <div class="relative w-full">
+                    <input
+                        @bind="newTag"
+                        @bind:event="oninput"
+                        @onkeypress="@(e => { if(e.Key == "Enter") { AddNewTag(); }})"
+                        placeholder="Enter tag name"
+                        class="w-full px-4 py-3 text-sm rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                </div>
+                <button
+                    @onclick="AddNewTag"
+                    disabled="@string.IsNullOrWhiteSpace(newTag)"
+                    class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 disabled:bg-gray-300">
+                    Add Tag
+                </button>
+            </div>
+        </div>
+
+        <!-- Tags Display Section -->
+        <div class="p-6 bg-white rounded-lg shadow-lg">
+            <h3 class="text-xl font-semibold text-gray-800 mb-6">Existing Tags</h3>
+            @if (tags.Any())
+            {
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    @foreach (var tag in tags)
+                    {
+                        <div class="relative p-4 bg-gray-100 rounded-lg shadow-sm group">
+                            <span class="text-gray-700 font-medium">@tag</span>
+                            <button
+                                @onclick="() => RemoveTag(tag)"
+                                class="absolute top-2 right-2 text-gray-500 hover:text-red-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="flex flex-col items-center py-10 border-2 border-dashed border-gray-300 rounded-lg">
+                    <p class="text-gray-500">No tags found. Add your first tag to get started.</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<string> tags = new List<string>();
+    private string newTag;
+
+    protected override void OnInitialized()
+    {
+        LoadTags();
+    }
+
+    private void LoadTags()
+    {
+        if (File.Exists(Utils.TAGS))
+        {
+            var json = File.ReadAllText(Utils.TAGS);
+            tags = string.IsNullOrWhiteSpace(json)
+                ? new List<string>()
+                : JsonSerializer.Deserialize<List<string>>(json);
+        }
+    }
+
+    private void SaveTags()
+    {
+        var json = JsonSerializer.Serialize(tags);
+        File.WriteAllText(Utils.TAGS, json);
+    }
+
+    private void AddNewTag()
+    {
+        if (!string.IsNullOrWhiteSpace(newTag) && !tags.Contains(newTag))
+        {
+            tags.Add(newTag);
+            SaveTags();
+            newTag = string.Empty;
+        }
+    }
+
+    private void RemoveTag(string tag)
+    {
+        tags.Remove(tag);
+        SaveTags();
+    }
+}
