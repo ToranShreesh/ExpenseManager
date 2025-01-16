@@ -21,19 +21,23 @@
                 <input required type="number" placeholder="Amount" @bind="Amount" class="mt-1 rounded border p-2" />
             </label>
 
-            @* <label class="flex flex-col"> *@
-            @*     <h2 class="text-xl font-semibold">Transaction type</h2> *@
 
-            @*     <select @bind="TransactionType" class="mt-1 rounded border p-2"> *@
-            @*         <option value="income">Income</option> *@
-            @*         <option value="expense">Expense</option> *@
-            @*         <option value="debt">Debt</option> *@
-            @*     </select> *@
-            @* </label> *@
 
             <label class="flex flex-col">
                 <h2 class="text-xl font-semibold">Tag</h2>
                 <select @bind="Tag" class="mt-1 rounded border p-2">
+                    <option value="Food">Food</option>
+                    <option value="Yearly">Yearly</option>
+                    <option value="Monthly">Monthly</option>
+                    <option value="Drinks">Drinks</option>
+                    <option value="Clothes">Clothes</option>
+                    <option value="Gadgets">Gadgets</option>
+                    <option value="Miscellaneous">Miscellaneous</option>
+                    <option value="Fuel">Fuel</option>
+                    <option value="Rent">Rent</option>
+                    <option value="EMI">EMI</option>
+                    <option value="Party">Party</option>
+
                     @foreach (var tag in tags)
                     {
                         <option value="@tag">@tag</option>
@@ -71,6 +75,7 @@
     private string? Note { get; set; } = string.Empty;
     private string error_message { get; set; } = string.Empty;
     private List<UserTransaction> transactions { get; set; } = new();
+    private double balance { get; set; }
 
     private List<string> tags = new List<string>();
     protected override void OnInitialized()
@@ -80,20 +85,24 @@
 
     private void LoadTags()
     {
-        if (File.Exists(Utils.TAGS))
-        {
-            var json = File.ReadAllText(Utils.TAGS);
-            tags = string.IsNullOrWhiteSpace(json)
-                ? new List<string>()
-                : System.Text.Json.JsonSerializer.Deserialize<List<string>>(json);
-        }
+        balance = Utils.Balance();
+        tags = Utils.GetTags();
     }
+    
 
     private async Task TransactionHandler()
     {
         try
         {
             UserTransaction transaction;
+           
+
+            // Ensure sufficient balance for expense transaction
+            if (TransactionType == "expense" && Amount > balance)
+            {
+                error_message = "Insufficient balance for this expense transaction.";
+                return;
+            }
 
             {
                 // Create non-debt transactions

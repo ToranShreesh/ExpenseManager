@@ -1,87 +1,75 @@
 ﻿<div class="top-row ps-3 navbar navbar-dark bg-black shadow-lg">
-  <div class="container-fluid">
-   
-  </div>
+    <div class="container-fluid"></div>
 </div>
 
 <input type="checkbox" title="Navigation menu" class="navbar-toggler hidden" />
 
-<div class="h-screen w-64 bg-black text-white p-4">
-  <h1 class="text-lg font-bold mb-6">Expense Manager</h1>
-<nav class="space-y-4">
-  
-    <div class="nav-item">
-      <NavLink
-        href="home"
-        class="block py-2 px-4 rounded-md font-medium hover:bg-gray-700 transition-colors"
-      >
-        Dashboard
-      </NavLink>
+
+
+<div class="flex ml-64 p-8 flex-1">
+    <!-- Sidebar -->
+    <div class="h-screen w-64 bg-black text-white p-4 fixed top-0 left-0">
+        <h1 class="text-lg font-bold mb-6">Expense Manager</h1>
+        <nav class="space-y-4">
+
+            <div class="nav-item">
+
+                <NavLink href="home"
+                         class="block py-2 px-4 rounded-md font-medium hover:bg-gray-700 transition-colors">
+                    Dashboard
+                </NavLink>
+            </div>
+
+            <div class="nav-item">
+                <NavLink href="addTag"
+                         class="block py-2 px-4 rounded-md font-medium hover:bg-gray-700 transition-colors">
+                    AddTag
+                </NavLink>
+            </div>
+            <div class="nav-item">
+                <NavLink href="addIncome"
+                         class="block py-2 px-4 rounded-md font-medium hover:bg-gray-700 transition-colors">
+                    AddIncome
+                </NavLink>
+            </div>
+            <div class="nav-item">
+                <NavLink href="income"
+                         class="block py-2 px-4 hover:bg-gray-700 rounded-md font-medium transition-colors">
+                    Income
+                </NavLink>
+            </div>
+            <div class="nav-item">
+                <NavLink href="addExpense"
+                         class="block py-2 px-4 rounded-md font-medium hover:bg-gray-700 transition-colors">
+                    AddExpense
+                </NavLink>
+            </div>
+            <div class="nav-item">
+                <NavLink href="expense"
+                         class="block py-2 px-4 hover:bg-gray-700 rounded-md font-medium transition-colors">
+                    Expense
+                </NavLink>
+            </div>
+            <div class="nav-item">
+                <NavLink href="addDebt"
+                         class="block py-2 px-4 rounded-md font-medium hover:bg-gray-700 transition-colors">
+                    AddDebt
+                </NavLink>
+            </div>
+            <div class="nav-item">
+                <NavLink href="debt"
+                         class="block py-2 px-4 hover:bg-gray-700 rounded-md font-medium transition-colors">
+                    Debt
+                </NavLink>
+            </div>
+            <div class="nav-item">
+                <NavLink href="TransactionList"
+                         class="block py-2 px-4 hover:bg-gray-700 rounded-md font-medium transition-colors">
+                    Transaction List
+                </NavLink>
+            </div>
+        </nav>
     </div>
-     
-    @* <div class="nav-item">
-      <NavLink
-        href="addTransaction"
-        class="block py-2 px-4 rounded-md font-medium hover:bg-gray-700 transition-colors"
-      >
-        AddTransaction
-      </NavLink>
-    </div> *@
-        <div class="nav-item">
-            <NavLink href="addTag"
-                     class="block py-2 px-4 rounded-md font-medium hover:bg-gray-700 transition-colors">
-                AddTag
-            </NavLink>
-        </div>
-        <div class="nav-item">
-            <NavLink href="addIncome"
-                     class="block py-2 px-4 rounded-md font-medium hover:bg-gray-700 transition-colors">
-                AddIncome
-            </NavLink>
-        </div>
-    <div class="nav-item">
-      <NavLink
-        href="income"
-        class="block py-2 px-4 hover:bg-gray-700 rounded-md font-medium transition-colors"
-      >
-        Income
-      </NavLink>
-    </div>
-        <div class="nav-item">
-            <NavLink href="addExpense"
-                     class="block py-2 px-4 rounded-md font-medium hover:bg-gray-700 transition-colors">
-                AddExpense
-            </NavLink>
-        </div>
-    <div class="nav-item">
-      <NavLink
-        href="expense"
-        class="block py-2 px-4 hover:bg-gray-700 rounded-md font-medium transition-colors"
-      >
-        Expense
-      </NavLink>
-    </div>
-        <div class="nav-item">
-            <NavLink href="addDebt"
-                     class="block py-2 px-4 rounded-md font-medium hover:bg-gray-700 transition-colors">
-                AddDebt
-            </NavLink>
-        </div>
-    <div class="nav-item">
-      <NavLink
-        href="debt"
-        class="block py-2 px-4 hover:bg-gray-700 rounded-md font-medium transition-colors"
-      >
-        Debt
-      </NavLink>
-    </div>
-    <div class="nav-item">
-      <NavLink
-        href="TransactionList"
-        class="block py-2 px-4 hover:bg-gray-700 rounded-md font-medium transition-colors"
-      >
-        Transaction List
-      </NavLink>
-    </div>
- </nav>
+
+   
 </div>

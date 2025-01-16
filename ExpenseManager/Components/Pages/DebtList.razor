@@ -60,13 +60,14 @@
             <tbody>
                 @foreach (var each in FilteredTransactions)
                 {
-                    <tr class="text-center hover:bg-gray-100">
+                    <tr class="@((each.TransactionType == "debt" && !each.IsCleared) ? "bg-blue-100" : "text-center hover:bg-gray-100")">
                         <td class="border border-gray-300 px-4 py-2">@each.Title</td>
                         <td class="border border-gray-300 px-4 py-2">@each.Amount</td>
                         <td class="border border-gray-300 px-4 py-2">@each.TransactionType</td>
                         <td class="border border-gray-300 px-4 py-2">@each.Tag</td>
                         <td class="border border-gray-300 px-4 py-2">@each.Date.ToShortDateString()</td>
                         <td class="border border-gray-300 px-4 py-2">@each.Note</td>
+
                         <td class="border border-gray-300 px-4 py-2">
                             @if (each.TransactionType == "debt")
                             {
@@ -80,14 +81,13 @@
                                                 @onclick="() => ClearDebt(each.Id)">
                                             Clear Debt
                                         </button>
+                                        <span class="text-red-700">@error_message</span>
                                     }
                                 </div>
                             }
-                            else
-                            {
-                                <span>-</span>
-                            }
                         </td>
+
+
                     </tr>
                 }
             </tbody>
@@ -106,9 +106,11 @@
     // Filter properties
     private string selectedTransactionType { get; set; } = "debt";
     private string selectedTag { get; set; } = "";
+    private string ErrorMessage { get; set; }
     private DateTime? startDate { get; set; } = null;
     private DateTime? endDate { get; set; } = null;
     private string searchTitle { get; set; } = "";
+    private double balance = 0;
 
     private IEnumerable<UserTransaction> FilteredTransactions
     {
@@ -189,29 +191,16 @@
 
             if (debt != null && debt.TransactionType == "debt" && !debt.IsCleared)
             {
-                // Calculate available income
-                double availableIncome = transactions
-                    .Where(t => t.TransactionType == "income")
-                    .Sum(t => t.Amount) -
-                    transactions
-                    .Where(t => t.TransactionType == "debit")
-                    .Sum(t => t.Amount);
-
-                // Check if there is enough income to clear the debt
-                if (availableIncome >= debt.Amount)
+                // Check if there is enough balance to clear the debt
+                if (balance >= debt.Amount)
                 {
-                    // Mark the debt as cleared
-                    debt.IsCleared = true;
+                    // Store the original debt amount
+                    var debtAmount = debt.Amount;
 
-                    // Create a new expense for debt clearance
-                    transactions.Add(new UserTransaction(
-                        title: "Debt Clearance: " + debt.Title,
-                        amount: debt.Amount,
-                        transactionType: "expense",
-                        tag: "Debt Payments",
-                        date: DateTime.Now,
-                        note: "Cleared debt: " + debt.Note
-                    ));
+                    // debt as cleared
+                    debt.IsCleared = true;
+                    debt.Amount = debt.Amount;  // Set the amount to 0 after clearing
+
 
                     // Save updated transactions to the file
                     await SaveTransactionsToFileAsync();
@@ -220,7 +209,7 @@
                 }
                 else
                 {
-                    error_message = "Insufficient income to clear this debt.";
+                    error_message = "Insufficient balance to clear this debt.";
                 }
             }
         }
@@ -229,7 +218,6 @@
             error_message = $"Error clearing debt: {ex.Message}";
         }
     }
-
     private async Task SaveTransactionsToFileAsync()
     {
         try
@@ -243,3 +231,5 @@
         }
     }
 }
+}
+   

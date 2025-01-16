@@ -1,68 +1,54 @@
 ﻿@page "/addTag"
-@using ExpenseManager.Components.Model
+@using ExpenseManager.Components.Layout
 @using Components.Model;
 @using System.Text.Json;
 @using Components.Utilities;
+<div class="flex justify-center bg-gradient-to-r from-blue-50 to-purple-50 min-h-screen">
 
-<div class="flex min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-    <!-- Main Content -->
-    <div class="ml-20 flex-1 px-8 py-10">
-        <!-- Header Section -->
-        <div class="mb-6">
-            <h2 class="text-4xl font-extrabold text-gray-800">Manage Tags</h2>
-            <p class="text-sm text-gray-500">Organize your content effectively by adding custom tags.</p>
+    <div class="mt-12 w-3/4 max-w-4xl rounded-lg bg-white p-8 shadow-lg">
+        <h3 class="mb-6 text-3xl font-extrabold text-gray-800">Tag Management</h3>
+
+        <!-- Input field and button to add a tag -->
+        <div class="mb-8 flex items-center gap-4">
+            <input @bind="newTag"
+                   placeholder="Enter a new tag"
+                   class="w-full max-w-md rounded-full border border-gray-300 bg-gray-50 p-3 shadow-sm focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-300" />
+            <button @onclick="AddNewTag"
+                    class="rounded-full bg-gradient-to-r from-purple-500 to-blue-500 px-6 py-3 font-semibold text-white shadow-md transition-transform duration-300 hover:scale-105 hover:from-purple-600 hover:to-blue-600">
+                Add Tag
+            </button>
         </div>
 
-        <!-- Add Tag Section -->
-        <div class="mb-10 p-6 bg-white rounded-lg shadow-lg">
-            <h3 class="text-xl font-semibold text-gray-800 mb-4">Add a New Tag</h3>
-            <div class="flex items-center gap-4">
-                <div class="relative w-full">
-                    <input
-                        @bind="newTag"
-                        @bind:event="oninput"
-                        @onkeypress="@(e => { if(e.Key == "Enter") { AddNewTag(); }})"
-                        placeholder="Enter tag name"
-                        class="w-full px-4 py-3 text-sm rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                </div>
-                <button
-                    @onclick="AddNewTag"
-                    disabled="@string.IsNullOrWhiteSpace(newTag)"
-                    class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 disabled:bg-gray-300">
-                    Add Tag
-                </button>
-            </div>
+        <!-- Display the default tags -->
+        <h4 class="mb-4 text-lg font-semibold text-gray-700">Default Tags:</h4>
+        <div class="mb-8 grid grid-cols-2 gap-4">
+            <span class="inline-block rounded-full bg-blue-100 px-4 py-2 text-sm font-medium text-blue-600 shadow">Yearly</span>
+            <span class="inline-block rounded-full bg-green-100 px-4 py-2 text-sm font-medium text-green-600 shadow">Monthly</span>
+            <span class="inline-block rounded-full bg-red-100 px-4 py-2 text-sm font-medium text-red-600 shadow">Food</span>
+            <span class="inline-block rounded-full bg-yellow-100 px-4 py-2 text-sm font-medium text-yellow-600 shadow">Drinks</span>
+            <span class="inline-block rounded-full bg-purple-100 px-4 py-2 text-sm font-medium text-purple-600 shadow">Clothes</span>
+            <span class="inline-block rounded-full bg-pink-100 px-4 py-2 text-sm font-medium text-pink-600 shadow">Gadgets</span>
+            <span class="inline-block rounded-full bg-indigo-100 px-4 py-2 text-sm font-medium text-indigo-600 shadow">Miscellaneous</span>
+            <span class="inline-block rounded-full bg-teal-100 px-4 py-2 text-sm font-medium text-teal-600 shadow">Fuel</span>
+            <span class="inline-block rounded-full bg-orange-100 px-4 py-2 text-sm font-medium text-orange-600 shadow">Rent</span>
+            <span class="inline-block rounded-full bg-gray-100 px-4 py-2 text-sm font-medium text-gray-600 shadow">EMI</span>
+            <span class="inline-block rounded-full bg-lime-100 px-4 py-2 text-sm font-medium text-lime-600 shadow">Party</span>
         </div>
 
-        <!-- Tags Display Section -->
-        <div class="p-6 bg-white rounded-lg shadow-lg">
-            <h3 class="text-xl font-semibold text-gray-800 mb-6">Existing Tags</h3>
-            @if (tags.Any())
+        <!-- Display the list of user-added tags -->
+        <h4 class="mb-4 text-lg font-semibold text-gray-700">Your Added Tags:</h4>
+        <ul class="space-y-4">
+            @foreach (var tag in tags)
             {
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                    @foreach (var tag in tags)
-                    {
-                        <div class="relative p-4 bg-gray-100 rounded-lg shadow-sm group">
-                            <span class="text-gray-700 font-medium">@tag</span>
-                            <button
-                                @onclick="() => RemoveTag(tag)"
-                                class="absolute top-2 right-2 text-gray-500 hover:text-red-500">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                </svg>
-                            </button>
-                        </div>
-                    }
-                </div>
+                <li class="flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 p-4 shadow">
+                    <span class="text-gray-800">@tag</span>
+                    <button @onclick="() => RemoveTag(tag)"
+                            class="rounded bg-red-500 px-3 py-1 text-white font-medium transition-transform duration-300 hover:scale-105 hover:bg-red-600">
+                        Remove
+                    </button>
+                </li>
             }
-            else
-            {
-                <div class="flex flex-col items-center py-10 border-2 border-dashed border-gray-300 rounded-lg">
-                    <p class="text-gray-500">No tags found. Add your first tag to get started.</p>
-                </div>
-            }
-        </div>
+        </ul>
     </div>
 </div>
 
@@ -77,18 +63,13 @@
 
     private void LoadTags()
     {
-        if (File.Exists(Utils.TAGS))
-        {
-            var json = File.ReadAllText(Utils.TAGS);
-            tags = string.IsNullOrWhiteSpace(json)
-                ? new List<string>()
-                : JsonSerializer.Deserialize<List<string>>(json);
-        }
+        tags = Utils.GetTags();
     }
 
     private void SaveTags()
     {
-        var json = JsonSerializer.Serialize(tags);
+        // Save tags to tag.json file
+        var json = System.Text.Json.JsonSerializer.Serialize(tags);
         File.WriteAllText(Utils.TAGS, json);
     }
 

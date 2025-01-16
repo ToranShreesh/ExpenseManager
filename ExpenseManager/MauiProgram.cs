@@ -1,5 +1,8 @@
 ﻿using ExpenseManager.Components.Utilities;
 using Microsoft.Extensions.Logging;
+using ExpenseManager.Components.Model;
+using System.Text.Json;
+
 
 namespace ExpenseManager
 {
@@ -20,9 +23,9 @@ namespace ExpenseManager
             {
                 Directory.CreateDirectory(Utils.ROOTFOLDER);
             }
+          
 
 
-           
             if (!File.Exists(Utils.TRANSACTIONS))
             {
                 File.Create(Utils.TRANSACTIONS).Close();
